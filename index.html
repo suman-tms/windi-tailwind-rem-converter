@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>React Rem converter</title>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+    <style>
+      .rem-container {
+        padding: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      window.onload = function () {
+        class RemConverter extends React.Component {
+          constructor(props) {
+            super(props);
+
+            this.state = {
+              px: '',
+              rem: 1,
+              tempPx: 16,
+              windi: 1/4
+            };
+
+            this.inputChange = this.inputChange.bind(this);
+            this.focusOutInput = this.focusOutInput.bind(this);
+          }
+
+          inputChange(event) {
+            const rem_value = event.target.value * (1 / 16);
+            const windi_value = event.target.value * (1 / 4);
+            this.setState({
+              px: event.target.value,
+              tempPx: event.target.value,
+              rem: rem_value,
+              windi: windi_value
+            });
+
+            navigator.clipboard.writeText(rem_value + "rem");
+          }
+
+          focusOutInput() {
+            this.setState({ px: "" });
+          }
+
+          render() {
+            return React.createElement(
+              "form",
+              { className: "rem-container" },
+              React.createElement("input", {
+                type: "number",
+                value: this.state.px,
+                placeholder: "enter px value (required)",
+                onChange: this.inputChange,
+                onBlur: this.focusOutInput,
+              }),
+              React.createElement(
+                "h1",
+                null,
+                `${this.state.tempPx}px is ${this.state.rem}rem`
+              ),
+              React.createElement(
+                "h1",
+                null,
+                `${this.state.tempPx}px is ${this.state.windi} in windi css size`
+              )
+            );
+          }
+        }
+
+        ReactDOM.render(
+          React.createElement(RemConverter, {}),
+          document.getElementById("root")
+        );
+      };
+    </script>
+  </body>
+</html>
